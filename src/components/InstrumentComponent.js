@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon from './Icon';
-import Swap from './icons/swap.svg';
-import colors from './colors';
+import Swap from '../icons/swap.svg';
+import colors from '../colors';
 
 const Beat = styled.div`
     width: 25px;
