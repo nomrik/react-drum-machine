@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import Instrument from './Instrument';
-import PlayStop from './PlayStop';
-import Triplets from './icons/triplets.svg';
-import Eighths from './icons/eighths.svg';
+import Instrument from './containers/InstrumentContainer';
+import PlayStop from './containers/PlayStopContainer';
 import Github from './icons/github.png';
 import Linkedin from './icons/linkedin.svg';
-import RangeInput from './RangeInput';
+
+import Controls from './containers/ControlsContainer';
 
 import player from './player';
 import colors from './colors';
-import Icon from './Icon';
+import Icon from './components/Icon';
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -38,7 +37,7 @@ const GlobalStyle = createGlobalStyle`
     }
     
   }
-`
+`;
 
 const StyledApp = styled.div`
   display: flex;
@@ -51,53 +50,28 @@ const StyledApp = styled.div`
     margin-bottom: 15px;
     margin-top: 15px;
   }
-`
-
-const Controls = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin-top: 30px;
-
-  & > * {
-    margin: 5px;
-  }
-`
+`;
 
 const Footer = styled.div`
   margin-top: auto;
   font-size: 10px;
-`
+`;
 
-
-function App() {
-  const [ tempo, setTempo ] = useState(100);
-  const [ volume, setVolume ] = useState(1);
-  const [ mode, setMode ] = useState(4);
-  const [ bars, setBars ] = useState(1);
-  const [ currentBeat, setCurrentBeat ] = useState(0);
-  const [ playing, setPlaying ] = useState(false);
-  const [ instruments, setInstruments ] = useState({ 
-    'kick': {
-      sound: 'kick1',
-      beats: []
-    },
-    'hihat': {
-      sound: 'hihat1',
-      beats: []
-    } ,
-    'snare': {
-      sound: 'snare1',
-      beats: []
-    }
-  });
-
+function App({
+  tempo,
+  volume,
+  mode,
+  bars,
+  playing,
+  instruments,
+  currentBeat,
+  onSetCurrentBeat
+}) {
   const numberOfBeats = mode * bars * 4;
 
   useEffect(() => {
-    setCurrentBeat(0);
-  }, [playing])
+    onSetCurrentBeat(0);
+  }, [playing, onSetCurrentBeat]);
 
   useEffect(() => {
     let intervalId = '';
@@ -108,84 +82,60 @@ function App() {
           if (beats[currentBeat]) {
             player.play(instruments[instrument].sound);
           }
-        })
-        setCurrentBeat(currentBeat => currentBeat < (numberOfBeats - 1) ? currentBeat + 1 : 0)
-      }, 60000 / mode / tempo)
+        });
+        onSetCurrentBeat(currentBeat < numberOfBeats - 1 ? currentBeat + 1 : 0);
+      }, 60000 / mode / tempo);
     }
-    
+
     return function cleanup() {
       clearInterval(intervalId);
-    }
-  }, [tempo, playing, currentBeat, instruments])
-
+    };
+  }, [
+    tempo,
+    playing,
+    currentBeat,
+    instruments,
+    onSetCurrentBeat,
+    mode,
+    numberOfBeats
+  ]);
 
   useEffect(() => {
-    const newInstruments = {...instruments};
-    Object.keys(newInstruments).forEach(instrument => {
-      newInstruments[instrument].beats = Array(numberOfBeats).fill(false);
-    })
-    setInstruments(newInstruments);
-  }, [mode])
-
-  useEffect(() => {
-    player.setVolume(volume)
-  }, [volume])
+    player.setVolume(volume);
+  }, [volume]);
 
   return (
-      <StyledApp>
-        <GlobalStyle />
-        <Controls>
-          <RangeInput title='TEMPO' min={60} max={250} value={tempo} onChange={e => {
-            const newTempo = e.target.value;
-            setTempo(newTempo)
-          }} />
-          <RangeInput title='VOLUME' min={0} max={100} value={Math.round(volume * 100)} onChange={e => {
-            const newVolume = e.target.value;
-            setVolume(newVolume / 100)
-          }} />
-          
-          <Icon width={30} src={mode === 4 ? Triplets : Eighths} onClick={() => setMode(mode => mode === 4 ? 3 : 4)} />
-        </Controls>
-        <div>
-          {Object.keys(instruments).map(instrument => {
-            const beats = instruments[instrument].beats;
-            return (
-              <Instrument 
-                selectedSound={instruments[instrument].sound}
-                beats={beats}
-                currentBeat={currentBeat}
-                playing={playing}
-                mode={mode}
-                sounds={player.sounds.filter(sound => sound.includes(instrument))}
-                onToggleBeat={index => {
-                  const newBeats = [...beats];
-                  newBeats[index] = !beats[index];
-                  setInstruments({
-                    ...instruments,
-                    [instrument]: {
-                      ...instruments[instrument],
-                      beats: newBeats
-                    }
-                  })
-                }}
-                onChangeSound={newSound => {
-                  setInstruments({
-                    ...instruments,
-                    [instrument]: {
-                      ...instruments[instrument],
-                      sound: newSound
-                    }
-                  })
-                }} 
-              />
-            )
-          })}
-        </div>
-        <PlayStop onClick={() => setPlaying(!playing)} playing={playing} />
-        <div>VIEW CODE ON <a href="#"><Icon src={Github}/></a></div>
-        <div>VIEW ME ON <a href="#"><Icon src={Linkedin} /></a></div>
-        <Footer>&copy; OMRI KOCHAVI 2019</Footer>
-      </StyledApp>
+    <StyledApp>
+      <GlobalStyle />
+      <Controls />
+      <div>
+        {Object.keys(instruments).map(instrumentName => {
+          return <Instrument instrumentName={instrumentName} />;
+        })}
+      </div>
+      <PlayStop />
+      <div>
+        VIEW CODE ON{' '}
+        <a
+          href="https://github.com/nomrik"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Icon src={Github} />
+        </a>
+      </div>
+      <div>
+        VIEW ME ON{' '}
+        <a
+          href="https://www.linkedin.com/in/omri-kochavi-b924b0124/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Icon src={Linkedin} />
+        </a>
+      </div>
+      <Footer>&copy; OMRI KOCHAVI 2019</Footer>
+    </StyledApp>
   );
 }
 

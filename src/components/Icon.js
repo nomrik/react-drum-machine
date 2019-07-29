@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const Icon = styled.img`
@@ -11,6 +10,6 @@ const Icon = styled.img`
   &:hover {
     opacity: 0.7;
   }
-`
+`;
 
 export default Icon;
