@@ -2,4 +2,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## React Drum Machine
 
-A simple arcade themed drum machine made with React.
+[LIVE HERE](https://github.com/nomrik/react-drum-machine).
+
+A simple arcade themed drum machine made with React and Redux.
