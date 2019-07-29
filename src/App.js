@@ -64,7 +64,7 @@ function App({ tempo, volume, mode, bars, playing, instruments, currentBeat, onS
 
   useEffect(() => {
     onSetCurrentBeat(0);
-  }, [playing])
+  }, [playing, onSetCurrentBeat])
 
   useEffect(() => {
     let intervalId = '';
@@ -83,7 +83,7 @@ function App({ tempo, volume, mode, bars, playing, instruments, currentBeat, onS
     return function cleanup() {
       clearInterval(intervalId);
     }
-  }, [tempo, playing, currentBeat, instruments])
+  }, [tempo, playing, currentBeat, instruments, onSetCurrentBeat, mode, numberOfBeats])
 
 
   useEffect(() => {
@@ -102,8 +102,8 @@ function App({ tempo, volume, mode, bars, playing, instruments, currentBeat, onS
           })}
         </div>
         <PlayStop />
-        <div>VIEW CODE ON <a href="#"><Icon src={Github}/></a></div>
-        <div>VIEW ME ON <a href="#"><Icon src={Linkedin} /></a></div>
+        <div>VIEW CODE ON <a href="https://github.com/nomrik" rel="noopener noreferrer" target="_blank"><Icon src={Github}/></a></div>
+        <div>VIEW ME ON <a href="https://www.linkedin.com/in/omri-kochavi-b924b0124/" rel="noopener noreferrer" target="_blank"><Icon src={Linkedin} /></a></div>
         <Footer>&copy; OMRI KOCHAVI 2019</Footer>
       </StyledApp>
   );
