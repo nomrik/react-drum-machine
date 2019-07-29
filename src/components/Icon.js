@@ -10,6 +10,6 @@ const Icon = styled.img`
   &:hover {
     opacity: 0.7;
   }
-`
+`;
 
 export default Icon;

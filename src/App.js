@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import Instrument from './containers/InstrumentContainer';
-import PlayStop from './PlayStopContainer';
+import PlayStop from './containers/PlayStopContainer';
 import Github from './icons/github.png';
 import Linkedin from './icons/linkedin.svg';
 
@@ -37,7 +37,7 @@ const GlobalStyle = createGlobalStyle`
     }
     
   }
-`
+`;
 
 const StyledApp = styled.div`
   display: flex;
@@ -50,21 +50,28 @@ const StyledApp = styled.div`
     margin-bottom: 15px;
     margin-top: 15px;
   }
-`
+`;
 
 const Footer = styled.div`
   margin-top: auto;
   font-size: 10px;
-`
+`;
 
-
-function App({ tempo, volume, mode, bars, playing, instruments, currentBeat, onSetCurrentBeat }) {
-
+function App({
+  tempo,
+  volume,
+  mode,
+  bars,
+  playing,
+  instruments,
+  currentBeat,
+  onSetCurrentBeat
+}) {
   const numberOfBeats = mode * bars * 4;
 
   useEffect(() => {
     onSetCurrentBeat(0);
-  }, [playing, onSetCurrentBeat])
+  }, [playing, onSetCurrentBeat]);
 
   useEffect(() => {
     let intervalId = '';
@@ -75,37 +82,60 @@ function App({ tempo, volume, mode, bars, playing, instruments, currentBeat, onS
           if (beats[currentBeat]) {
             player.play(instruments[instrument].sound);
           }
-        })
-        onSetCurrentBeat(currentBeat < (numberOfBeats - 1) ? currentBeat + 1 : 0)
-      }, 60000 / mode / tempo)
+        });
+        onSetCurrentBeat(currentBeat < numberOfBeats - 1 ? currentBeat + 1 : 0);
+      }, 60000 / mode / tempo);
     }
-    
+
     return function cleanup() {
       clearInterval(intervalId);
-    }
-  }, [tempo, playing, currentBeat, instruments, onSetCurrentBeat, mode, numberOfBeats])
-
+    };
+  }, [
+    tempo,
+    playing,
+    currentBeat,
+    instruments,
+    onSetCurrentBeat,
+    mode,
+    numberOfBeats
+  ]);
 
   useEffect(() => {
-    player.setVolume(volume)
-  }, [volume])
+    player.setVolume(volume);
+  }, [volume]);
 
   return (
-      <StyledApp>
-        <GlobalStyle />
-        <Controls />
-        <div>
-          {Object.keys(instruments).map(instrumentName => {
-            return (
-              <Instrument instrumentName={instrumentName} />
-            )
-          })}
-        </div>
-        <PlayStop />
-        <div>VIEW CODE ON <a href="https://github.com/nomrik" rel="noopener noreferrer" target="_blank"><Icon src={Github}/></a></div>
-        <div>VIEW ME ON <a href="https://www.linkedin.com/in/omri-kochavi-b924b0124/" rel="noopener noreferrer" target="_blank"><Icon src={Linkedin} /></a></div>
-        <Footer>&copy; OMRI KOCHAVI 2019</Footer>
-      </StyledApp>
+    <StyledApp>
+      <GlobalStyle />
+      <Controls />
+      <div>
+        {Object.keys(instruments).map(instrumentName => {
+          return <Instrument instrumentName={instrumentName} />;
+        })}
+      </div>
+      <PlayStop />
+      <div>
+        VIEW CODE ON{' '}
+        <a
+          href="https://github.com/nomrik"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Icon src={Github} />
+        </a>
+      </div>
+      <div>
+        VIEW ME ON{' '}
+        <a
+          href="https://www.linkedin.com/in/omri-kochavi-b924b0124/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Icon src={Linkedin} />
+        </a>
+      </div>
+      <Footer>&copy; OMRI KOCHAVI 2019</Footer>
+    </StyledApp>
   );
 }
 
