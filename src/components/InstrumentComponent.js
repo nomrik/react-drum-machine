@@ -77,6 +77,7 @@ function Instrument(props) {
         {beats.map((beat, index) => (
           <Beat
             index={index}
+            key={index}
             mode={mode}
             isActive={beat}
             currentBeat={currentBeat}
