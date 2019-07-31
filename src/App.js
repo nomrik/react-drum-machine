@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import Instrument from './containers/InstrumentContainer';
-import PlayStop from './containers/PlayStopContainer';
+import Player from './containers/PlayerContainer';
 import Github from './icons/github.png';
 import Linkedin from './icons/linkedin.svg';
 
 import Controls from './containers/ControlsContainer';
 
-import player from './player';
 import colors from './colors';
 import Icon from './components/Icon';
 
@@ -57,63 +56,23 @@ const Footer = styled.div`
   font-size: 10px;
 `;
 
-function App({
-  tempo,
-  volume,
-  mode,
-  bars,
-  playing,
-  instruments,
-  currentBeat,
-  onSetCurrentBeat
-}) {
-  const numberOfBeats = mode * bars * 4;
-
+function App({ instruments, onKeyDown}) {
   useEffect(() => {
-    onSetCurrentBeat(0);
-  }, [playing, onSetCurrentBeat]);
-
-  useEffect(() => {
-    let intervalId = '';
-    if (playing) {
-      intervalId = setInterval(() => {
-        Object.keys(instruments).forEach(instrument => {
-          const beats = instruments[instrument].beats;
-          if (beats[currentBeat]) {
-            player.play(instruments[instrument].sound);
-          }
-        });
-        onSetCurrentBeat(currentBeat < numberOfBeats - 1 ? currentBeat + 1 : 0);
-      }, 60000 / mode / tempo);
-    }
-
+    document.addEventListener('keydown', onKeyDown);
     return function cleanup() {
-      clearInterval(intervalId);
-    };
-  }, [
-    tempo,
-    playing,
-    currentBeat,
-    instruments,
-    onSetCurrentBeat,
-    mode,
-    numberOfBeats
-  ]);
-
-  useEffect(() => {
-    player.setVolume(volume);
-  }, [volume]);
-
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [onKeyDown])
   return (
     <StyledApp>
       <GlobalStyle />
       <Controls />
       <div>
         {Object.keys(instruments).map(instrumentName => {
-          return <Instrument instrumentName={instrumentName} />;
+          return <Instrument key={instrumentName} instrumentName={instrumentName} />;
         })}
       </div>
-      <PlayStop />
+      <Player />
       <div>
         VIEW CODE ON{' '}
         <a

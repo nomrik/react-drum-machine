@@ -7,7 +7,7 @@ import {
   getMode
 } from '../core/selectors/playerSelectors';
 import { changeSound, toggleBeat } from '../core/actions/instrumentsActions';
-import player from '../player';
+import { instrumentsBank } from '../core/constants/instrumentsConstants';
 
 import InstrumentComponent from '../components/InstrumentComponent';
 
@@ -21,7 +21,7 @@ const mapStateToProps = (state, ownProps) => {
     currentBeat: getCurrentBeat(state),
     playing: getPlaying(state),
     mode: getMode(state),
-    sounds: player.sounds.filter(sound => sound.includes(instrumentName))
+    sounds: Object.keys(instrumentsBank).filter(sound => sound.includes(instrumentName))
   };
 };
 

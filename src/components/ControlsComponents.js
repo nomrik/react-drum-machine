@@ -52,7 +52,7 @@ export default function Controls({
       <Icon
         width={30}
         src={mode === 4 ? Triplets : Eighths}
-        onClick={() => onSetMode(mode === 4 ? 3 : 4, bars)}
+        onClick={() => onSetMode(mode === 4 ? 6 : 4, bars)}
       />
     </StyledControls>
   );

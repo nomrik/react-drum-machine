@@ -37,7 +37,7 @@ function createInstrumentReducer(instrumentName) {
 
 
 export default combineReducers({
-    kick: createInstrumentReducer('kick'),
-    snare: createInstrumentReducer('snare'),
-    hihat: createInstrumentReducer('hihat'),
+    KICK: createInstrumentReducer('KICK'),
+    SNARE: createInstrumentReducer('SNARE'),
+    HIHAT: createInstrumentReducer('HIHAT'),
 })
